@@ -16,7 +16,7 @@ angular.module('angular-medium-editor', [])
     return {
       require: 'ngModel',
       restrict: 'AE',
-      scope: { bindOptions: '=' },
+      scope: { bindOptions: '=', eventsConfig: '=' },
       link: function(scope, iElement, iAttrs, ngModel) {
 
         angular.element(iElement).addClass('angular-medium-editor');
@@ -45,6 +45,10 @@ angular.module('angular-medium-editor', [])
         ngModel.editor.subscribe('editableInput', function (event, editable) {
           ngModel.$setViewValue(editable.innerHTML.trim());
         });
+		
+		angular.forEach(scope.eventsConfig, function(callback, eventName){
+			ngModel.editor.subscribe(eventName, callback);
+		});
 
         scope.$watch('bindOptions', function(bindOptions) {
           ngModel.editor.init(iElement, bindOptions);
